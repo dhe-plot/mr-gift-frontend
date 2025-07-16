@@ -1,6 +1,8 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
 import mrGiftLogo from './assets/mr_gift_logo.png'
+import { AuthButton } from './components/auth/AuthButton'
+import { OnboardingFlow } from './components/onboarding/OnboardingFlow'
 
 // Sample data for stories
 const sampleStories = [
@@ -124,6 +126,41 @@ const topGifters = [
 export default function HomePage() {
   const [stories, setStories] = useState(sampleStories)
   const [likedStories, setLikedStories] = useState(new Set())
+  const [showOnboarding, setShowOnboarding] = useState(false)
+  const [isAuthenticated, setIsAuthenticated] = useState(false)
+  const [userData, setUserData] = useState(null)
+
+  // Check for existing user data on component mount
+  useEffect(() => {
+    const savedUserData = localStorage.getItem('mrGiftUserData')
+    if (savedUserData) {
+      const parsedData = JSON.parse(savedUserData)
+      setUserData(parsedData)
+      setIsAuthenticated(true)
+    }
+  }, [])
+
+  const handleAuthSuccess = () => {
+    setIsAuthenticated(true)
+    setShowOnboarding(true)
+  }
+
+  const handleOnboardingComplete = (data) => {
+    setUserData(data)
+    setShowOnboarding(false)
+    // In a real app, this would save to your backend
+    console.log('Onboarding completed:', data)
+  }
+
+  const handleOpenPreferences = () => {
+    // Handle preferences modal opening
+    console.log('Opening preferences...')
+  }
+
+  // Show onboarding flow if user is authenticated but hasn't completed onboarding
+  if (isAuthenticated && showOnboarding) {
+    return <OnboardingFlow onComplete={handleOnboardingComplete} />
+  }
 
   const handleLike = (storyId) => {
     const newLiked = new Set(likedStories)
@@ -169,26 +206,7 @@ export default function HomePage() {
         </nav>
         
         <div style={{ display: 'flex', gap: '1rem' }}>
-          <button style={{
-            background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
-            color: 'white',
-            border: 'none',
-            padding: '0.5rem 1.5rem',
-            borderRadius: '8px',
-            cursor: 'pointer'
-          }}>
-            Sign In
-          </button>
-          <button style={{
-            background: 'linear-gradient(135deg, #4ecdc4 0%, #45b7aa 100%)',
-            color: 'white',
-            border: 'none',
-            padding: '0.5rem 1.5rem',
-            borderRadius: '8px',
-            cursor: 'pointer'
-          }}>
-            Get Started
-          </button>
+          <AuthButton onOpenPreferences={handleOpenPreferences} />
         </div>
       </header>
 
