@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import { Settings, User, LogIn, UserPlus, ChevronDown } from 'lucide-react'
 
-export function AuthButton({ onOpenPreferences }) {
+export function AuthButton({ onOpenPreferences, onAuthSuccess, isAuthenticated, userData }) {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false)
   const [showAuthModal, setShowAuthModal] = useState(false)
   const [authMode, setAuthMode] = useState('signin') // 'signin' or 'signup'
@@ -10,9 +10,9 @@ export function AuthButton({ onOpenPreferences }) {
   const isDemoMode = !import.meta.env.VITE_CLERK_PUBLISHABLE_KEY ||
                      import.meta.env.VITE_CLERK_PUBLISHABLE_KEY.includes('your_clerk_publishable_key_here')
 
-  // For demo purposes, simulate user state
-  const [isSignedIn, setIsSignedIn] = useState(false)
-  const [user, setUser] = useState(null)
+  // Use props for authentication state, fallback to local state for demo
+  const isSignedIn = isAuthenticated || false
+  const user = userData || null
 
   const handleAuthClick = (mode) => {
     setAuthMode(mode)
@@ -22,19 +22,18 @@ export function AuthButton({ onOpenPreferences }) {
 
   const handleDemoSignIn = () => {
     // Simulate sign in for demo
-    setIsSignedIn(true)
-    setUser({
-      firstName: 'Demo',
-      fullName: 'Demo User',
-      imageUrl: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&w=32&h=32&q=80'
-    })
     setShowAuthModal(false)
+    if (onAuthSuccess) {
+      onAuthSuccess()
+    }
   }
 
   const handleSignOut = () => {
-    setIsSignedIn(false)
-    setUser(null)
+    // Clear localStorage and reset state
+    localStorage.removeItem('mrGiftUserData')
     setIsDropdownOpen(false)
+    // Reload the page to reset all state
+    window.location.reload()
   }
 
   if (isSignedIn) {
@@ -45,12 +44,12 @@ export function AuthButton({ onOpenPreferences }) {
           className="flex items-center gap-2 p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
         >
           <img
-            src={user?.imageUrl}
-            alt={user?.fullName || user?.firstName || 'User'}
+            src={user?.imageUrl || userData?.personal?.imageUrl || 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&w=32&h=32&q=80'}
+            alt={user?.fullName || userData?.personal?.firstName || 'User'}
             className="w-8 h-8 rounded-full border-2 border-blue-500"
           />
           <span className="hidden sm:block text-sm font-medium text-gray-700 dark:text-gray-300">
-            {user?.firstName || 'User'}
+            {user?.firstName || userData?.personal?.firstName || userData?.firstName || 'User'}
           </span>
           <ChevronDown className="w-4 h-4 text-gray-500" />
         </button>
@@ -59,10 +58,10 @@ export function AuthButton({ onOpenPreferences }) {
           <div className="absolute right-0 mt-2 w-48 bg-white dark:bg-gray-800 rounded-lg shadow-lg border border-gray-200 dark:border-gray-700 z-50">
             <div className="p-3 border-b border-gray-200 dark:border-gray-700">
               <p className="text-sm font-medium text-gray-900 dark:text-white">
-                {user?.fullName || user?.firstName || 'User'}
+                {user?.fullName || userData?.personal?.firstName || userData?.firstName || 'Demo User'}
               </p>
               <p className="text-xs text-gray-500 dark:text-gray-400">
-                Signed in
+                {userData?.userType === 'both' ? 'Buyer & Seller' : userData?.userType === 'seller' ? 'Seller' : 'Gift Explorer'}
               </p>
             </div>
             <div className="py-1">

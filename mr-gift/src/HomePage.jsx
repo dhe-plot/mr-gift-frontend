@@ -206,7 +206,12 @@ export default function HomePage() {
         </nav>
         
         <div style={{ display: 'flex', gap: '1rem' }}>
-          <AuthButton onOpenPreferences={handleOpenPreferences} />
+          <AuthButton
+            onOpenPreferences={handleOpenPreferences}
+            onAuthSuccess={handleAuthSuccess}
+            isAuthenticated={isAuthenticated}
+            userData={userData}
+          />
         </div>
       </header>
 
