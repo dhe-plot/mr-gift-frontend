@@ -4,7 +4,62 @@
     <meta charset="UTF-8" />
     <link rel="icon" type="image/svg+xml" href="/vite.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Vite + React</title>
+    <meta name="description" content="Mr Gift - Your Ultimate Gifting Platform with browser compatibility fixes applied." />
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval'; style-src 'self' 'unsafe-inline'; img-src 'self' data: https:; connect-src 'self' https:;" />
+    <meta name="theme-color" media="(prefers-color-scheme: light)" content="#ffffff" />
+    <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#242424" />
+    <meta name="theme-color" content="#ffffff" />
+    <title>🎁 Mr Gift - Your Ultimate Gifting Platform</title>
+    <script>
+      // Critical compatibility fixes - inline for immediate execution
+      (function() {
+        'use strict';
+
+        function addCompatibilityFixes() {
+          const style = document.createElement('style');
+          style.id = 'compatibility-fixes-critical';
+          style.textContent = `
+            html {
+              -webkit-text-size-adjust: 100% !important;
+              -moz-text-size-adjust: 100% !important;
+              -ms-text-size-adjust: 100% !important;
+              text-size-adjust: 100% !important;
+            }
+
+            .backdrop-filter,
+            [class*="backdrop-blur"] {
+              -webkit-backdrop-filter: var(--tw-backdrop-blur, ) !important;
+              backdrop-filter: var(--tw-backdrop-blur, ) !important;
+            }
+
+            .filter,
+            [class*="blur"],
+            [class*="brightness"],
+            [class*="contrast"] {
+              -webkit-filter: var(--tw-blur, ) !important;
+              filter: var(--tw-blur, ) !important;
+            }
+
+            .select-none {
+              -webkit-user-select: none !important;
+              -moz-user-select: none !important;
+              -ms-user-select: none !important;
+              user-select: none !important;
+            }
+
+            * {
+              forced-color-adjust: auto;
+            }
+          `;
+          document.head.appendChild(style);
+        }
+
+        // Run immediately
+        addCompatibilityFixes();
+
+        console.log('🎉 Mr Gift - Browser compatibility fixes applied!');
+      })();
+    </script>
   </head>
   <body>
     <div id="root"></div>
