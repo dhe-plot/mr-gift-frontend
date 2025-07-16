@@ -1,4 +1,4 @@
-module.exports = {
+const config = {
   plugins: {
     tailwindcss: {},
     autoprefixer: {
@@ -18,4 +18,6 @@ module.exports = {
       remove: false
     }
   },
-}
+};
+
+export default config;
